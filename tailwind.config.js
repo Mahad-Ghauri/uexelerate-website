@@ -1,23 +1,28 @@
 /** @type {import('tailwindcss').Config} */
-const defaultConfig = require("shadcn/ui/tailwind.config")
-
 module.exports = {
-  ...defaultConfig,
+  darkMode: ["class"],
   content: [
-    ...defaultConfig.content,
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    ...defaultConfig.theme,
     extend: {
-      ...defaultConfig.theme.extend,
       colors: {
-        ...defaultConfig.theme.extend.colors,
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
         primary: {
-          ...defaultConfig.theme.extend.colors.primary,
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
           50: "#ecfeff",
           100: "#cffafe",
           200: "#a5f3fc",
@@ -30,7 +35,8 @@ module.exports = {
           900: "#164e63",
         },
         secondary: {
-          ...defaultConfig.theme.extend.colors.secondary,
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
           50: "#eff6ff",
           100: "#dbeafe",
           200: "#bfdbfe",
@@ -42,6 +48,21 @@ module.exports = {
           800: "#1e40af",
           900: "#1e3a8a",
         },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
       },
       animation: {
         "gradient-x": "gradient-x 15s ease infinite",
@@ -99,5 +120,5 @@ module.exports = {
       },
     },
   },
-  plugins: [...defaultConfig.plugins, require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate")],
 }
