@@ -2,10 +2,20 @@
 
 import { motion, useScroll, useTransform } from "framer-motion"
 import { ChevronDown, Sparkles, Zap } from "lucide-react"
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
+
+interface Particle {
+  id: number
+  left: number
+  top: number
+  duration: number
+  delay: number
+}
 
 const Hero = () => {
   const ref = useRef<HTMLDivElement>(null)
+  const [particles, setParticles] = useState<Particle[]>([])
+  
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -13,6 +23,18 @@ const Hero = () => {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"])
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+
+  // Generate particles only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const newParticles: Particle[] = Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }))
+    setParticles(newParticles)
+  }, [])
 
   const scrollToServices = () => {
     const element = document.querySelector("#services")
@@ -25,13 +47,13 @@ const Hero = () => {
     <section id="home" ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* 3D Background Elements */}
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className="absolute w-2 h-2 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             animate={{
               y: [0, -30, 0],
@@ -39,9 +61,9 @@ const Hero = () => {
               scale: [1, 1.2, 1],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Number.POSITIVE_INFINITY,
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}
