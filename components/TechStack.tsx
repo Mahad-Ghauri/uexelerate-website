@@ -2,8 +2,19 @@
 
 import { motion } from "framer-motion"
 import { Database, Globe, Smartphone, Brain, Cloud, GitBranch, Palette, Shield } from "lucide-react"
+import { useEffect, useState } from "react"
+
+interface FloatingIcon {
+  id: number
+  left: number
+  top: number
+  duration: number
+  delay: number
+}
 
 const TechStack = () => {
+  const [floatingIcons, setFloatingIcons] = useState<FloatingIcon[]>([])
+
   const primaryStack = [
     { name: "MEAN Stack", icon: Globe, description: "MongoDB, Express.js, Angular, Node.js" },
     { name: "Flutter & Dart", icon: Smartphone, description: "Cross-platform mobile development" },
@@ -22,6 +33,18 @@ const TechStack = () => {
     { name: "Provider State", icon: Shield, description: "Flutter state management" },
   ]
 
+  // Generate floating icons only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const newFloatingIcons: FloatingIcon[] = Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 4 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }))
+    setFloatingIcons(newFloatingIcons)
+  }, [])
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -39,7 +62,7 @@ const TechStack = () => {
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut",
+        ease: "easeOut" as const,
       },
     },
   }
@@ -161,13 +184,13 @@ const TechStack = () => {
 
         {/* Floating Tech Icons */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(15)].map((_, i) => (
+          {floatingIcons.map((icon) => (
             <motion.div
-              key={i}
+              key={icon.id}
               className="absolute w-8 h-8 opacity-10"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${icon.left}%`,
+                top: `${icon.top}%`,
               }}
               animate={{
                 y: [0, -20, 0],
@@ -175,9 +198,9 @@ const TechStack = () => {
                 opacity: [0.1, 0.3, 0.1],
               }}
               transition={{
-                duration: 4 + Math.random() * 2,
+                duration: icon.duration,
                 repeat: Number.POSITIVE_INFINITY,
-                delay: Math.random() * 2,
+                delay: icon.delay,
               }}
             >
               <div className="w-full h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-lg" />
